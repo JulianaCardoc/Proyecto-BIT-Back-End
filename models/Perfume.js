@@ -9,6 +9,14 @@ const perfumeSchema = mongoose.Schema({
     concentration: [String],
     brand: String,
     volume: Number,
+    category: [{
+        type: mongoose.Types.ObjectId,
+        ref: "Category",
+    }],
+    images: [{
+        type: mongoose.Types.ObjectId,
+        ref: "Images",
+    }],
 });
 const Perfume = mongoose.model("Perfume", perfumeSchema);
 

@@ -1,3 +1,4 @@
+import { mongo } from "mongoose";
 import mongoose from "../config/mongoose.js";
 
 const personSchema = mongoose.Schema({
@@ -6,6 +7,14 @@ const personSchema = mongoose.Schema({
     email: String,
     document: Number,
     cellphone: Number,
+    addresses: [{
+        type: mongoose.Types.ObjectId,
+        ref:"Addresses",
+    }],
+    creditCard: [{
+        type: mongoose.Types.ObjectId,
+        ref:"CreditCard",
+    }],
 });
 const Person = mongoose.model("Person", personSchema);
 
