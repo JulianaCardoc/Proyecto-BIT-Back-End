@@ -1,16 +1,9 @@
 import express from "express";
-import userControllers from "./controllers/userController.js";
-
+import userRoutes from "./routes/userRoutes.js";
 const app = express();
-
 app.use(express.json());
 
-app.get("/api/users", userControllers.list);
-app.get("/api/users/:id", userControllers.findUserById);
-app.post("/api/users", userControllers.createNewUser);
-app.post("/api/users/login", userControllers.login);
-app.patch("/api/users/:id", userControllers.updateUser);
-app.delete("/api/users/:id", userControllers.deleteUser);
+app.use("/api/users", userRoutes)
 
 
 app.listen(3000, () => {

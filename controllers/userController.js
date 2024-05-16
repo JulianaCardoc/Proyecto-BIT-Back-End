@@ -37,6 +37,7 @@ async function createNewUser(req, res) {
         });
         res.status(200).json(newUser);
     } catch(err) {
+        console.log(err);
         res.status(500).json({
             message: "Internal server error",
             error: err
@@ -64,6 +65,7 @@ async function deleteUser(req, res) {
         await User.findByIdAndDelete(req.params.id);
         res.status(200).json("User deleted successfully");
     } catch(err) {
+        console.log(err);
         res.status(500).json({
             message: "Internal server error",
             error: err
@@ -86,6 +88,7 @@ async function login(req, res) {
         res.json("Usuario no encontrado");
       }
     } catch(err) {
+        console.log(err);
         res.status(500).json({
             message: "Internal server error",
             error: err
