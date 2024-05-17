@@ -5,14 +5,14 @@ const itemsSchema = mongoose.Schema({
     discount: Number,
     tax: Number,
     totalItem: Number,
-    perfume: [{
+    perfume: {
         type: mongoose.Types.ObjectId,
         ref: "Perfume",
-    }],
-    sell: [{
+    },
+    sell: {
         type: mongoose.Types.ObjectId,
         ref: "Sell",
-    }],
+    },
 });
 const Items = mongoose.model("Items", itemsSchema);
 

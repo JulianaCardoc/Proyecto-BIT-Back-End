@@ -10,14 +10,14 @@ const userSchema = mongoose.Schema({
         type: String,
         match: /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?\/\\~-]).{6,}$/
     },
-    roll: [{
+    roll: {
         type: mongoose.Types.ObjectId,
         ref: "Roll",
-    }],
-    person: [{
+    },
+    person: {
         type: mongoose.Types.ObjectId,
         ref: "Person",
-    }],
+    },
 });
 const User = mongoose.model("User", userSchema);
 

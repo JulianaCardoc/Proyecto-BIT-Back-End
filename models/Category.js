@@ -1,7 +1,10 @@
 import mongoose from "../config/mongoose.js";
 
 const categorySchema = mongoose.Schema({
-    name: String,
+    name: {
+        type: String,
+        unique: true
+    },
     description: String,
     imgUrl: String,
 });

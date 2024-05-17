@@ -7,14 +7,14 @@ const sellSchema = mongoose.Schema({
     observation: String,
     date: Date,
     dueDate: Date,
-    user: [{
+    user: {
         type: mongoose.Types.ObjectId,
         ref: "User",
-    }],
-    paymentMethod: [{
+    },
+    paymentMethod: {
         type: mongoose.Types.ObjectId,
         ref:"PaymentMethod",
-    }],
+    },
 });
 const Sell = mongoose.model("Sell", sellSchema);
 

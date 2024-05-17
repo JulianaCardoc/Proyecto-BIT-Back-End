@@ -5,8 +5,8 @@ const perfumeSchema = mongoose.Schema({
     price: Number,
     description: String,
     essence: String,
-    durability: [String],
-    concentration: [String],
+    durability: String,
+    concentration: Number,
     brand: String,
     volume: Number,
     category: [{

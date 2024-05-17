@@ -48,8 +48,11 @@ async function createNewUser(req, res) {
 async function updateUser(req, res) {
     try {
         const user = await User.findById(req.params.id);
+        const password = req.body.password;
+        const hash = await bcrypt.hash(password, 10);
+
         user.username = req.body.username || user.username;
-        user.password = req.body.password || user.password;
+        user.password = hash || user.password;
         await user.save();
         res.status(200).json(user);
     } catch(err) {
