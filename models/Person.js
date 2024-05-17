@@ -1,11 +1,16 @@
-import { mongo } from "mongoose";
 import mongoose from "../config/mongoose.js";
 
 const personSchema = mongoose.Schema({
     name: String,
     lastName: String,
-    email: String,
-    document: Number,
+    email: {
+        type: String,
+        unique: true
+    },
+    document: {
+        type: Number,
+        unique: true
+    },
     cellphone: Number,
     addresses: [{
         type: mongoose.Types.ObjectId,
