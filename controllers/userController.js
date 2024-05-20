@@ -58,18 +58,25 @@ async function createNewUser(req, res) {
 async function updateUser(req, res) {
     try {
         const user = await User.findById(req.params.id);
-        const password = req.body.password;
-        const hash = await bcrypt.hash(password, 10);
-
+        if(req.body.password) {
+            const password = req.body.password;
+            const hash = await bcrypt.hash(password, 10);
+            user.password = hash || user.password;
+            }
         user.username = req.body.username || user.username;
-        user.password = hash || user.password;
+        
         await user.save();
         res.status(200).json(user);
     } catch(err) {
+        if(err.code == 11000) {
+            res.status(400).json("This username already exist");
+        } else {
+        console.log(err);
         res.status(500).json({
             message: "Internal server error",
             error: err
-        });
+            });
+        }
     }
 }
 
