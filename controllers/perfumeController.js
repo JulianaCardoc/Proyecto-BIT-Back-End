@@ -1,14 +1,12 @@
 import Perfume from "../models/Perfume.js";
+import bitErrorHandler from "../utils/errorHandler.js";
 
 async function list(req, res) {
     try {
         const perfumeList = await Perfume.find();
         res.json(perfumeList);
     } catch(err) {
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-        });
+        bitErrorHandler.error500ServerError(res, err);
     }
 }
 
@@ -17,15 +15,11 @@ async function findPerfumeById(req, res) {
         const perfumeId = req.params.id;
         const perfume = await Perfume.findById(perfumeId);
         if(!perfume) {
-            res.status(404).json("Perfume not found");
-        } else {
-            res.status(200).json(perfume);
-        } 
+            bitErrorHandler.error404NotFound(res, Perfume.modelName);
+        }
+        res.status(200).json(perfume);
     } catch(err) {
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-        });
+        bitErrorHandler.error500ServerError(res, err);
     }
 }
 
@@ -54,19 +48,14 @@ async function createNewPerfume(req, res) {
         const exist = await Perfume.findOne({name: newPerfume.name});
         if(exist) {
             if (exist.volume == newPerfume.volume) {
-                return res.status(400).json("This perfume already exist") 
+                bitErrorHandler.error400Database(res, Perfume.modelName);
             }
-        } else {
-            await Perfume.create(newPerfume);
-        }  
+        }
+        await Perfume.create(newPerfume);  
         res.status(200).json(newPerfume);
-    } catch(err) {
-        console.log(err);
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-        });
-    }
+        } catch(err) {
+        bitErrorHandler.error500ServerError(res, err);
+        }
 }
 
 async function updatePerfume(req, res) {
@@ -84,10 +73,7 @@ async function updatePerfume(req, res) {
         await perfume.save();   
         res.status(200).json(perfume);
     } catch(err) {
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-        });
+        bitErrorHandler.error500ServerError(res, err);
     }
 }
 
@@ -95,17 +81,13 @@ async function deletePerfume(req, res) {
     try {
         const perfume = await Perfume.findById(req.params.id);
         if(!perfume){
-            return res.status(404).json("Perfume not found");
+            bitErrorHandler.error404NotFound(res, Perfume.modelName);
         }
         await Perfume.deleteOne(perfume);
         res.status(200).json("Perfume deleted successfully");
         
     } catch(err) {
-        console.log(err);
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-        });
+        bitErrorHandler.error500ServerError(res, err);
     }
 }
 

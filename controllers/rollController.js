@@ -1,14 +1,12 @@
 import Roll from "../models/Roll.js";
+import bitErrorHandler from "../utils/errorHandler.js";
 
 async function list(req, res) {
     try {
         const rollList = await Roll.find();
         res.json(rollList);
     } catch(err) {
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-        });
+        bitErrorHandler.error500ServerError(res, err);
     }
 }
 
@@ -17,15 +15,11 @@ async function findRollById(req, res) {
         const rollId = req.params.id;
         const roll = await Roll.findById(rollId);
         if(!roll) {
-            res.status(404).json("Roll not found");
-        } else {
-            res.status(200).json(roll);
+            bitErrorHandler.error404NotFound(res, Roll.modelName);
         }
+        res.status(200).json(roll);
     } catch(err) {
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-        });
+        bitErrorHandler.error500ServerError(res, err);
     }
 }
 
@@ -38,13 +32,9 @@ async function createNewRoll(req, res) {
         res.status(200).json(newRoll);
     } catch(err) {
         if(err.code == 11000) {
-            res.status(400).json("This roll already exist");
+            bitErrorHandler.error400Database(res, err);
         } else {
-        console.log(err);
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-            });
+            bitErrorHandler.error500ServerError(res, err);
         }
     }
 }
@@ -59,12 +49,9 @@ async function updateRoll(req, res) {
         res.status(200).json(roll);
     } catch(err) {
         if(err.code == 11000) {
-            res.status(400).json("This roll already exist");
+            bitErrorHandler.error400Database(res, err);
         } else {
-            res.status(500).json({
-            message: "Internal server error",
-            error: err
-            });
+            bitErrorHandler.error500ServerError(res, err);
         }
     }
 }
@@ -73,16 +60,12 @@ async function deleteRoll(req, res) {
     try {
         const roll = await Roll.findById(req.params.id);
         if(!roll) {
-            return res.status(404).json("Roll not found");
+            bitErrorHandler.error404NotFound(res, Roll.modelName);
         }
         await Roll.deleteOne(roll);
         res.status(200).json("Roll deleted successfully");
     } catch(err) {
-        console.log(err);
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-        });
+        bitErrorHandler.error500ServerError(res, err);
     }
 }
 

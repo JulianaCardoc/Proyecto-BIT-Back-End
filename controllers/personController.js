@@ -1,15 +1,12 @@
 import Person from "../models/Person.js";
-
+import bitErrorHandler from "../utils/errorHandler.js";
 
 async function list(req, res) {
     try {
         const personList = await Person.find();
         res.json(personList);
     } catch(err) {
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-        });
+        bitErrorHandler.error500ServerError(res, err);
     }
 }
 
@@ -18,17 +15,14 @@ async function findPersonById(req, res) {
         const personId = req.params.id;
         const person = await Person.findById(personId);
         if(!person) {
-            res.status(404).json("Person not found");
-        } else {
-            res.status(200).json(person);
+            return bitErrorHandler.error404NotFound(res, Person.modelName)
         }
+        res.status(200).json(person);
     } catch(err) {
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-        });
+        bitErrorHandler.error500ServerError(res, err);
     }
 }
+
 
 async function createNewPerson(req, res) {
     try {
@@ -42,13 +36,11 @@ async function createNewPerson(req, res) {
         res.status(200).json(newPerson);
     } catch (err) {
         if(err.code == 11000) {
-            res.status(400).json(`The ${Object.keys(err.keyValue)} ${err.keyValue[Object.keys(err.keyValue)]} already exist`);
+            bitErrorHandler.error400Database(res, err);
         } else {
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-            });
+        bitErrorHandler.error500ServerError(res, err);
         }
+        
     }
 }
 
@@ -65,29 +57,24 @@ async function updatePerson(req, res) {
         res.status(200).json(person);
     } catch(err) {
         if(err.code == 11000) {
-            res.status(400).json(`The ${Object.keys(err.keyValue)} ${err.keyValue[Object.keys(err.keyValue)]} already exist`);
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-            });
+            bitErrorHandler.error400Database(res, err);
+        }   else {
+            bitErrorHandler.error500ServerError(res, err);
         }
     }
 }
+
 
 async function deletePerson(req, res) {
     try {
         const person = await Person.findById(req.params.id);
         if(!person) {
-            return res.status(404).json("Person not found");
+            return bitErrorHandler.error404NotFound(res, Person.modelName);
         }
         await Person.deleteOne(person);
         res.status(200).json("Person deleted successfully");
     } catch(err) {
-        console.log(err);
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-        });
+        bitErrorHandler.error500ServerError(res, err);
     }
 }
 

@@ -2,33 +2,27 @@ import { expressjwt } from "express-jwt";
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import bitErrorHandler from "../utils/errorHandler.js";
 
 async function list(req, res) {
     try {
         const usersList = await User.find();
         res.json(usersList);
     } catch(err) {
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-        });
+        bitErrorHandler.error500ServerError(res, err);
     }
 }
 
 async function findUserById(req, res) {
     try {
         const userId = req.params.id;
-        const user = await User.findById(userId);
+        const user = await User.findById(userId).populate("roll").populate("person");
         if(!user) {
-            res.status(404).json("User not found");
-        } else {
-            res.status(200).json(user);
+            bitErrorHandler.error404NotFound(res, User.modelName);
         }
+        res.status(200).json(user);
     } catch(err) {
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-        });
+        bitErrorHandler.error500ServerError(res, err);
     }
 }
 
@@ -38,19 +32,19 @@ async function createNewUser(req, res) {
         const hash = await bcrypt.hash(password, 10); 
 
         const newUser = await User.create({
-            username: req.body.username,
+            username: req.body.username, 
             password: hash,
+            roll: req.body.roll,
+            person: req.body.person,
         });
         res.status(200).json(newUser);
     } catch(err) {
         if(err.code == 11000) {
-            res.status(400).json("This username already exist");
+            bitErrorHandler.error400Database(res, err);
+        } else if(err.name === "ValidationError") {
+            bitErrorHandler.error428Required(res, err);
         } else {
-        console.log(err);
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-            });
+            bitErrorHandler.error500ServerError(res, err);
         }
     }
 }
@@ -64,18 +58,16 @@ async function updateUser(req, res) {
             user.password = hash || user.password;
             }
         user.username = req.body.username || user.username;
+        user.roll = req.body.roll || user.roll;
+        user.person = req.body.person || user.person;
         
         await user.save();
         res.status(200).json(user);
     } catch(err) {
         if(err.code == 11000) {
-            res.status(400).json("This username already exist");
+            bitErrorHandler.error400Database(res, err);
         } else {
-        console.log(err);
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-            });
+            bitErrorHandler.error500ServerError(res, err);
         }
     }
 }
@@ -84,16 +76,12 @@ async function deleteUser(req, res) {
     try {
         const user = await User.findById(req.params.id);
         if(!user) {
-            return res.status(404).json("User not found");
+            bitErrorHandler.error404NotFound(res, User.modelName);
         }
         await User.deleteOne(user);
         res.status(200).json("User deleted successfully");
     } catch(err) {
-        console.log(err);
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-        });
+        bitErrorHandler.error500ServerError(res, err);
     }
 }
 
@@ -117,11 +105,7 @@ async function login(req, res) {
         res.json("Usuario no encontrado");
       }
     } catch(err) {
-        console.log(err);
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-        });
+        bitErrorHandler.error500ServerError(res, err);
     }
   }
 

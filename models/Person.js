@@ -9,7 +9,8 @@ const personSchema = mongoose.Schema({
     },
     document: {
         type: Number,
-        unique: true
+        unique: true,
+        match: /^.{8,10}$/
     },
     cellphone: Number,
     addresses: [{

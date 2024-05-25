@@ -1,14 +1,12 @@
 import Category from "../models/Category.js";
+import bitErrorHandler from "../utils/errorHandler.js";
 
 async function list(req, res) {
     try {
         const categoryList = await Category.find();
         res.json(categoryList);
     } catch(err) {
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-        });
+        bitErrorHandler.error500ServerError(res, err);
     }
 }
 
@@ -17,15 +15,11 @@ async function findCategoryById(req, res) {
         const categoryId = req.params.id;
         const category = await Category.findById(categoryId);
         if(!category) {
-            res.status(404).json("Category not found");
-        } else {
-            res.status(200).json(category);
+            return bitErrorHandler.error404NotFound(res, Category.modelName);
         }
+        res.status(200).json(category);
     } catch(err) {
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-        });
+        bitErrorHandler.error500ServerError(res, err);
     }
 }
 
@@ -39,13 +33,10 @@ async function createNewCategory(req, res) {
         res.status(200).json(newCategory);
     } catch(err) {
         if(err.code == 11000) {
-            res.status(400).json("This category already exist");
+            bitErrorHandler.error400Database(res, err);
         }
          else {
-            res.status(500).json({
-            message: "Internal server error",
-            error: err
-            });
+            bitErrorHandler.error500ServerError(res, err);
         }
     }
 }
@@ -61,13 +52,10 @@ async function updateCategory(req, res) {
         res.status(200).json(category);
     } catch(err) {
         if(err.code == 11000) {
-            res.status(400).json("This category already exist");
+            bitErrorHandler.error400Database(res, err);
         }
         else {
-            res.status(500).json({
-            message: "Internal server error",
-            error: err
-            });
+            bitErrorHandler.error500ServerError(res, err);
         }
     }   
 }
@@ -76,16 +64,12 @@ async function deleteCategory(req, res) {
     try {
         const category = await Category.findById(req.params.id);
         if(!category) {
-            return res.status(404).json("Category not found");
+            bitErrorHandler.error404NotFound(res, Category.modelName);
         } 
         await Category.deleteOne(category);
         return res.status(200).json("Category deleted successfully");
     } catch(err) {
-        console.log(err);
-        res.status(500).json({
-            message: "Internal server error",
-            error: err
-        });
+        bitErrorHandler.error500ServerError(res, err);
     }
 }
 
