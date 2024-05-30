@@ -13,7 +13,7 @@ async function list(req, res) {
 async function findPerfumeById(req, res) {
     try {
         const perfumeId = req.params.id;
-        const perfume = await Perfume.findById(perfumeId);
+        const perfume = await Perfume.findById(perfumeId).populate("images");
         if(!perfume) {
             bitErrorHandler.error404NotFound(res, Perfume.modelName);
         }
@@ -33,6 +33,8 @@ async function createNewPerfume(req, res) {
             concentration: req.body.concentration,            
             brand: req.body.brand,
             volume: req.body.volume,
+            category: req.body.category,
+            images: req.body.images,
         };
 
         if(req.body.concentration > 0 && req.body.concentration <= 0.33) {
@@ -70,6 +72,8 @@ async function updatePerfume(req, res) {
         perfume.concentration = req.body.concentration || perfume.concentration;
         perfume.brand = req.body.brand || perfume.brand;
         perfume.volume = req.body.volume || perfume.volume;
+        perfume.images = req.body.images || perfume.images; 
+        perfume.category = req.body.category || perfume.category; 
         await perfume.save();   
         res.status(200).json(perfume);
     } catch(err) {

@@ -1,5 +1,6 @@
 import express from "express";
 import perfumeController from "../controllers/perfumeController.js";
+
 const router = express.Router();
 
 router.get("/", perfumeController.list);
