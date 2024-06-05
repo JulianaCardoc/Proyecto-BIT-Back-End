@@ -13,7 +13,7 @@ async function list(req, res) {
 async function findPersonById(req, res) {
     try {
         const personId = req.params.id;
-        const person = await Person.findById(personId);
+        const person = await Person.findById(personId).populate("addresses").populate("creditCard");
         if(!person) {
             return bitErrorHandler.error404NotFound(res, Person.modelName)
         }

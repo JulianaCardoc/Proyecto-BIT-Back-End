@@ -9,6 +9,7 @@ import rollRoutes from "./routes/rollRoutes.js";
 import addressesRoutes from "./routes/addressesRoutes.js";
 import paymentMethodRoutes from "./routes/paymentMethodRoutes.js";
 import imagesRoutes from "./routes/imagesRoutes.js";
+import sellRoutes from "./routes/sellRoutes.js";
 
 
 const app = express();
@@ -27,6 +28,7 @@ app.use("/api/roll", rollRoutes);
 app.use("/api/addresses", addressesRoutes);
 app.use("/api/paymentMethod", paymentMethodRoutes);
 app.use("/api/images", imagesRoutes);
+app.use("/api/sell", sellRoutes);
 
 app.listen(3000, () => {
     console.log("Servidor corriendo en el puerto 3000");
