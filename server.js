@@ -10,6 +10,7 @@ import addressesRoutes from "./routes/addressesRoutes.js";
 import paymentMethodRoutes from "./routes/paymentMethodRoutes.js";
 import imagesRoutes from "./routes/imagesRoutes.js";
 import sellRoutes from "./routes/sellRoutes.js";
+import creditCardRoutes from "./routes/creditCardRoutes.js"
 
 
 const app = express();
@@ -29,6 +30,7 @@ app.use("/api/addresses", addressesRoutes);
 app.use("/api/paymentMethod", paymentMethodRoutes);
 app.use("/api/images", imagesRoutes);
 app.use("/api/sell", sellRoutes);
+app.use("/api/creditCard", creditCardRoutes);
 
 app.listen(3000, () => {
     console.log("Servidor corriendo en el puerto 3000");

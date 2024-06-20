@@ -3,7 +3,7 @@ import bitErrorHandler from "../utils/errorHandler.js";
 
 async function list(req, res) {
     try {
-        const paymentMethodList = await PaymentMethod.find();
+        const paymentMethodList = await PaymentMethod.find({deletedAt: null});
         res.json(paymentMethodList);
     } catch(err) {
         bitErrorHandler.error500ServerError(res, err);
@@ -14,10 +14,10 @@ async function findPaymentMethodById(req, res) {
     try {
         const paymentMethodId = req.params.id;
         const paymentMethod = await PaymentMethod.findById(paymentMethodId);
-        if(!paymentMethod) {
-            bitErrorHandler.error404NotFound(res, PaymentMethod.modelName);
+        if(!paymentMethod || paymentMethod.deletedAt) {
+            return bitErrorHandler.error404NotFound(res, PaymentMethod.modelName);
         }
-        res.status(200).json(paymentMethod);
+        return res.status(200).json(paymentMethod);
     } catch(err) {
         bitErrorHandler.error500ServerError(res, err);
     }
@@ -59,10 +59,11 @@ async function updatePaymentMethod(req, res) {
 async function deletePaymentMethod(req, res) {
     try {
         const paymentMethod = await PaymentMethod.findById(req.params.id);
-        if(!paymentMethod){
+        if(!paymentMethod || paymentMethod.deleteAt){
             bitErrorHandler.error404NotFound(res, PaymentMethod.modelName);
         }
-        await PaymentMethod.deleteOne(paymentMethod);
+        paymentMethod.deletedAt = new Date();
+        await paymentMethod.save(paymentMethod);
         res.status(200).json("Payment Method deleted successfully");
     } catch(err) {
         bitErrorHandler.error500ServerError(res, err);

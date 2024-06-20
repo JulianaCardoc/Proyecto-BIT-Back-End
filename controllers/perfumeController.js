@@ -3,7 +3,7 @@ import bitErrorHandler from "../utils/errorHandler.js";
 
 async function list(req, res) {
     try {
-        const perfumeList = await Perfume.find();
+        const perfumeList = await Perfume.find({deletedAt: null});
         res.json(perfumeList);
     } catch(err) {
         bitErrorHandler.error500ServerError(res, err);
@@ -14,12 +14,12 @@ async function findPerfumeById(req, res) {
     try {
         const perfumeId = req.params.id;
         const perfume = await Perfume.findById(perfumeId).populate("category");
-        if(!perfume) {
-            bitErrorHandler.error404NotFound(res, Perfume.modelName);
+        if(!perfume || perfume.deletedAt) {
+           return bitErrorHandler.error404NotFound(res, Perfume.modelName);
         }
-        res.status(200).json(perfume);
+        return res.status(200).json(perfume);
     } catch(err) {
-        bitErrorHandler.error500ServerError(res, err);
+        return bitErrorHandler.error500ServerError(res, err);
     }
 }
 
@@ -84,10 +84,11 @@ async function updatePerfume(req, res) {
 async function deletePerfume(req, res) {
     try {
         const perfume = await Perfume.findById(req.params.id);
-        if(!perfume){
+        if(!perfume || perfume.deletedAt){
             bitErrorHandler.error404NotFound(res, Perfume.modelName);
         }
-        await Perfume.deleteOne(perfume);
+        perfume.deletedAt = new Date();
+        await perfume.save(perfume);
         res.status(200).json("Perfume deleted successfully");
         
     } catch(err) {

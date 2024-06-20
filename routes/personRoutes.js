@@ -6,7 +6,6 @@ const router = express.Router();
 
 router.get("/", personController.list);
 router.post("/", personController.createNewPerson);
-// router.post("/login", personController.login);
 router.get("/:id", personController.findPersonById);
 router.patch("/:id", personController.updatePerson);
 router.delete("/:id", personController.deletePerson);

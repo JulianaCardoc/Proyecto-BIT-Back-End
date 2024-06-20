@@ -3,10 +3,6 @@ import mongoose from "../config/mongoose.js";
 const personSchema = mongoose.Schema({
     name: String,
     lastName: String,
-    email: {
-        type: String,
-        unique: true
-    },
     document: {
         type: Number,
         unique: true,
@@ -21,6 +17,10 @@ const personSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref:"CreditCard",
     }],
+    deletedAt: {
+        type: Date,
+        default: null,
+    }
 });
 const Person = mongoose.model("Person", personSchema);
 

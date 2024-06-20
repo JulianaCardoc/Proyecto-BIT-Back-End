@@ -17,6 +17,10 @@ const perfumeSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "Images",
     }],
+    deletedAt: {
+        type: Date,
+        default: null,
+    },
 });
 const Perfume = mongoose.model("Perfume", perfumeSchema);
 

@@ -7,6 +7,10 @@ const addressesSchema = mongoose.Schema({
     city: String,
     state: String,
     country: String,
+    deletedAt: {
+        type: Date,
+        default: null,
+    }
 });
 const Addresses = mongoose.model("Addresses", addressesSchema);
 

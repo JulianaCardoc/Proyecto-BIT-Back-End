@@ -1,11 +1,11 @@
 import mongoose from "../config/mongoose.js";
 
 const userSchema = mongoose.Schema({
-    username: {
+    email: {
         type: String,
-        required: true,
-        unique: true           
-        },
+        unique: true,
+        required: true
+    },
     password: {
         type: String,
         match: /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?\/\\~-]).{6,}$/
@@ -18,6 +18,10 @@ const userSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "Person",
     },
+    deletedAt: {
+        type: Date,
+        default: null,
+    }
 });
 const User = mongoose.model("User", userSchema);
 
