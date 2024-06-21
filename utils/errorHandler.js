@@ -1,3 +1,5 @@
+import { validationResult } from "express-validator";
+
 let bitErrorHandler = {
     error500ServerError: function(res, err) {
         console.log(err);
@@ -20,6 +22,22 @@ let bitErrorHandler = {
             message: "There is a trouble with your request",
             error: err
         })
+    },
+    errorsIsEmpty: function(req, res, next) {
+        const result = validationResult(req);
+        if (result.errors.length !== 0) {
+            let err = result.errors.length == 1 ? `The request has ${result.errors.length} validation error:` : `The request has ${result.errors.length} validation errors:`;
+            for (let i = 0; i < result.errors.length; i++) {
+                if (i < result.errors.length - 1) {
+                    err += ` ${result.errors[i].msg} in ${result.errors[i].path},`    
+                } else {
+                    err += ` ${result.errors[i].msg} in ${result.errors[i].path}.`
+                } 
+            }
+            return res.status(400).json(err);
+          } else {
+            next();
+          }
     }
 }
 

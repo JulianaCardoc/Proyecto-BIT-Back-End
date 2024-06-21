@@ -2,12 +2,13 @@ import mongoose from "../config/mongoose.js";
 
 const personSchema = mongoose.Schema({
     name: String,
-    lastName: String,
+    lastname: String,
     document: {
         type: Number,
         unique: true,
         match: /^.{8,10}$/
     },
+    documentType: String,
     cellphone: Number,
     addresses: [{
         type: mongoose.Types.ObjectId,

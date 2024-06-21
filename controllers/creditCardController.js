@@ -27,7 +27,7 @@ async function createNewCreditCard(req, res) {
     try {
         const newCreditCard = await CreditCard.create ({
             name: req.body.name,
-            lastname: req.body.lastName,
+            lastname: req.body.lastname,
             cardNumber: req.body.cardNumber,
             goodThru: req.body.goodThru,
             cvv: req.body.cvv,            
@@ -49,7 +49,7 @@ async function updateCreditCard(req, res) {
         const creditCard = await CreditCard.findById(req.params.id);
 
         creditCard.name = req.body.name || creditCard.name;
-        creditCard.lastName = req.body.lastName || creditCard.lastName;
+        creditCard.lastname = req.body.lastname || creditCard.lastname;
         creditCard.cardNumber = req.body.cardNumber || creditCard.cardNumber;
         creditCard.goodThru = req.body.goodThru || creditCard.goodThru;
         creditCard.cvv = req.body.cvv || creditCard.cvv;

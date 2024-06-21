@@ -13,7 +13,7 @@ async function list(req, res) {
 async function findPerfumeById(req, res) {
     try {
         const perfumeId = req.params.id;
-        const perfume = await Perfume.findById(perfumeId).populate("category");
+        const perfume = await Perfume.findById(perfumeId).populate("category").populate("images");
         if(!perfume || perfume.deletedAt) {
            return bitErrorHandler.error404NotFound(res, Perfume.modelName);
         }

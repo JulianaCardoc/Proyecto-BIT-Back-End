@@ -27,7 +27,7 @@ async function createNewPerson(req, res) {
     try {
         const newPerson = await Person.create({
             name: req.body.name,
-            lastName: req.body.lastName,
+            lastname: req.body.lastname,
             document: req.body.document,
             cellphone: req.body.cellphone,
         });
@@ -47,7 +47,7 @@ async function updatePerson(req, res) {
         const person = await Person.findById(req.params.id);
 
         person.name = req.body.name || person.name;
-        person.lastName = req.body.lastName || person.lastName;
+        person.lastname = req.body.lastname || person.lastname;
         person.document = req.body.document || person.document;
         person.cellphone = req.body.cellphone || person.cellphone;
         await person.save();
