@@ -9,6 +9,14 @@ const perfumeSchema = mongoose.Schema({
     concentration: Number,
     brand: String,
     volume: Number,
+    onSale: {
+        type: Boolean,
+        default: false,
+    },
+    onSaleDiscount: {
+        type: Number,
+        default: 0,
+    },
     category: [{
         type: mongoose.Types.ObjectId,
         ref: "Category",

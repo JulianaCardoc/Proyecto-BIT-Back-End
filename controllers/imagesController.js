@@ -25,14 +25,14 @@ async function findImageById(req, res) {
 }
 
 async function uploadNewImage(req, res) {
-    if(!req.file) {
-        const err = "The field file is required"
-        bitErrorHandler.error400BadRequest(res, err);
-    }
+    // if(!req.file) {
+    //     const err = "The field file is required"
+    //     bitErrorHandler.error400BadRequest(res, err);
+    // }
     try {
         const newImage = await Images.create({
             description: req.body.description,
-            imgUrl: `../public/uploads/${req.file.filename}`,
+            imgUrl: req.body.imgUrl,
         });
         res.json(newImage);
     } catch (err) {

@@ -7,6 +7,7 @@ const sellSchema = mongoose.Schema({
     observation: String,
     date: Date,
     dueDate: Date,
+    status: Number,
     user: {
         type: mongoose.Types.ObjectId,
         ref: "User",

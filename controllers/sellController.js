@@ -35,6 +35,7 @@ async function createNewSale(req, res) {
             dueDate: req.body.dueDate,
             user: req.body.user,
             paymentMethod: req.body.paymentMethod,
+            status: req.body.status,
         });
         if(req.body.items && req.body.items.length > 0) {
             for(const item of req.body.items) {
@@ -66,7 +67,7 @@ async function updateSale(req, res) {
         sale.dueDate = req.body.dueDate || sale.dueDate;
         sale.user = req.body.user || sale.user;
         sale.paymentMethod = req.body.paymentMethod || sale.paymentMethod;
-
+        sale.status = req.body.status || sale.status;
         
 
         await sale.save();

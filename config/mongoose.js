@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
+import "dotenv/config";
 
-mongoose.connect("mongodb://127.0.0.1/proyectoBITDB");
+mongoose.connect(process.env.MONGODB_CONNECTION);
 
 export default mongoose;
