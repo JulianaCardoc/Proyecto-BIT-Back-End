@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import fs from "fs";
 import path from "path";
 import userRoutes from "./routes/userRoutes.js";
@@ -14,6 +15,7 @@ import creditCardRoutes from "./routes/creditCardRoutes.js"
 
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 const uploadDir = path.join(import.meta.dirname, 'public/uploads');
