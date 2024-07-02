@@ -10,27 +10,31 @@ async function list(req, res) {
             essence,
             brand,
             onSale,
-            category
+            category,
+            limit
         } = req.query;
-
+        
         let query = { deletedAt: null };
-
         if (name) query.name = { $regex: name, $options: 'i' };
         if (essence) query.essence = essence;
         if (brand) query.brand = brand;
         if (onSale) query.onSale = onSale === 'true';
         if (category) query.category = category;
-
         if (minPrice || maxPrice) {
             query.price = {};
             if (minPrice) query.price.$gte = parseFloat(minPrice);
             if (maxPrice) query.price.$lte = parseFloat(maxPrice);
         }
 
-        const perfumeList = await Perfume.find(query)
+        let perfumeQuery = Perfume.find(query)
             .populate('category')
             .populate('images');
 
+        if (limit) {
+            perfumeQuery = perfumeQuery.limit(parseInt(limit));
+        }
+
+        const perfumeList = await perfumeQuery;
         res.json(perfumeList);
     } catch (err) {
         bitErrorHandler.error500ServerError(res, err);
